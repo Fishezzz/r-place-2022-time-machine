@@ -2,17 +2,47 @@ body {
     margin: 0px;
     background-color: #000000;
     color: #ffffff;
+    overflow: hidden;
 }
 
 header {
-    position: sticky;
-    top: 0;
-    background-color: #000000;
+    background-color: #1f1f1f;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
 }
 
-img {
-    /* display: block; */
-    margin: auto;
-    width: 99vmax;
-    height: 99vmax;
+header > ul {
+    list-style-type: none;
+    margin: 10px;
+    padding: 0;
+    overflow: hidden;
+}
+
+header >ul > li {
+    float: left;
+    height: 28px;
+}
+
+#datetime {
+    width: 20ch;
+    margin: 4px;
+}
+
+#slider {
+    width: calc(100vw - 20ch - 60px);
+}
+
+#image {
+    width: 100vmax;
+    height: 100vmax;
+}
+
+#draggable {
+    position: absolute;
+    z-index: 9;
+}
+
+.move {
+    cursor: move;
 }

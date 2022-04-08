@@ -47,3 +47,59 @@ loadData();
 
 // update image when slider changes
 slider.addEventListener("change", sliderChanged);
+
+// Make the DIV element draggable
+dragElement(document.getElementById("draggable"));
+
+function dragElement(elem) {
+    let newX = 0, newY = 0, oldX = 0, oldY = 0;
+
+    if (document.getElementById(elem.id + "header")) {
+        // if present, the header is where you move the DIV from
+        document.getElementById(elem.id + "header").onmousedown = dragMouseDown;
+    } else {
+        // otherwise, move the DIV from anywhere inside the DIV
+        elem.onmousedown = dragMouseDown;
+    }
+
+    // start of dragging
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        // get the mouse cursor position at startup
+        oldX = e.clientX;
+        oldY = e.clientY;
+
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves
+        document.onmousemove = elementDrag;
+
+        elem.classList.add("move");
+    }
+
+    // while dragging
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        // calculate the new cursor position
+        newX = oldX - e.clientX;
+        newY = oldY - e.clientY;
+        oldX = e.clientX;
+        oldY = e.clientY;
+
+        // set the element's new position
+        elem.style.top = (elem.offsetTop - newY) + "px";
+        elem.style.left = (elem.offsetLeft - newX) + "px";
+    }
+
+    // end of dragging
+    function closeDragElement() {
+        // stop moving when mouse button is released
+        document.onmouseup = null;
+        document.onmousemove = null;
+
+        elem.classList.remove("move");
+    }
+}

@@ -24,17 +24,19 @@
 </head>
 <body>
     <header>
-        <table width="100%">
-            <tr>
-                <td id="datetime" style="width: 160px;"></td>
-                <td style="width: 5%"></td>
-                <td><input id="slider" type="range" min="0" max="10410" step="1" style="width: calc(100%);"></td>
-                <td style="width: 5%"></td>
-            </tr>
-        </table>
+        <ul>
+            <li>
+                <div id="datetime"></div>
+            </li>
+            <li>
+                <input id="slider" type="range" min="0" max="10410" step="1">
+            </li>
+        </ul>
     </header>
     <main>
-        <img id="image" src="https://rplace.space/combined/1648822500.png">
+        <div id="draggable">
+            <img id="image" src="https://rplace.space/combined/1648822500.png">
+        </div>
     </main>
 </body>
 </html>
