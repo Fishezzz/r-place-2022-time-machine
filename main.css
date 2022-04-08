@@ -31,6 +31,7 @@ header >ul > li {
 
 #slider {
     width: calc(100vw - 30ch - 75px);
+    min-width: 250px;
 }
 
 #image {
