@@ -1,0 +1,18 @@
+body {
+    margin: 0px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    background-color: #000000;
+}
+
+img {
+    /* display: block; */
+    margin: auto;
+    width: 99vmax;
+    height: 99vmax;
+}
