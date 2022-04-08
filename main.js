@@ -19,7 +19,7 @@ function loadData() {
                     // set some initial values
                     slider.value = 0;
                     slider.max = data.length - 1;
-                    datetime.innerHTML = data[0].date;
+                    datetime.innerHTML = dateFromFilename(data[0].file);
                 }
             }
         }
@@ -30,13 +30,19 @@ function loadData() {
 function sliderChanged(event) {
     if (!onCooldown) {
         image.src = BASE_URL + data[slider.value].file;
-        datetime.innerHTML = data[slider.value].date;
+        datetime.innerHTML = dateFromFilename(data[slider.value].file);
 
         onCooldown = true;
         cooldown = setTimeout(() => { onCooldown = false; }, 200);
     } else {
         event.stopImmediatePropagation();
     }
+}
+
+function dateFromFilename(filename) {
+    let unix = parseInt(filename.split('.')[0]);
+    let date = new Date(unix * 1000);
+    return date.toUTCString();
 }
 
 let image = document.getElementById("image");
@@ -54,13 +60,7 @@ dragElement(document.getElementById("draggable"));
 function dragElement(elem) {
     let newX = 0, newY = 0, oldX = 0, oldY = 0;
 
-    if (document.getElementById(elem.id + "header")) {
-        // if present, the header is where you move the DIV from
-        document.getElementById(elem.id + "header").onmousedown = dragMouseDown;
-    } else {
-        // otherwise, move the DIV from anywhere inside the DIV
-        elem.onmousedown = dragMouseDown;
-    }
+    elem.onmousedown = dragMouseDown;
 
     // start of dragging
     function dragMouseDown(e) {

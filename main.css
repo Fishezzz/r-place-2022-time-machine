@@ -25,12 +25,12 @@ header >ul > li {
 }
 
 #datetime {
-    width: 20ch;
+    width: 30ch;
     margin: 4px;
 }
 
 #slider {
-    width: calc(100vw - 20ch - 60px);
+    width: calc(100vw - 30ch - 75px);
 }
 
 #image {
