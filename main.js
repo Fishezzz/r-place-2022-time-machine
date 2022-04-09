@@ -60,10 +60,12 @@ dragElement(document.getElementById("draggable"));
 function dragElement(elem) {
     let newX = 0, newY = 0, oldX = 0, oldY = 0;
 
-    elem.onmousedown = dragMouseDown;
+    elem.onmousedown = startDragElement;
+    elem.ontouchstart = touchStart;
 
+    ////// Desktop
     // start of dragging
-    function dragMouseDown(e) {
+    function startDragElement(e) {
         e = e || window.event;
         e.preventDefault();
 
@@ -71,7 +73,7 @@ function dragElement(elem) {
         oldX = e.clientX;
         oldY = e.clientY;
 
-        document.onmouseup = closeDragElement;
+        document.onmouseup = endDragElement;
         // call a function whenever the cursor moves
         document.onmousemove = elementDrag;
 
@@ -95,11 +97,51 @@ function dragElement(elem) {
     }
 
     // end of dragging
-    function closeDragElement() {
+    function endDragElement() {
         // stop moving when mouse button is released
         document.onmouseup = null;
         document.onmousemove = null;
 
         elem.classList.remove("move");
+    }
+
+    ////// Mobile
+    // start of touch
+    function touchStart(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        // get the touch position at startup
+        oldX = e.touches[0].clientX
+        oldY = e.touches[0].clientY;
+
+        document.ontouchcancel = touchEnd;
+        document.ontouchend = touchEnd;
+        // call a function whenever the touch moves
+        document.ontouchmove = touchMoveElement;
+    }
+
+    // while moving
+    function touchMoveElement(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        // calculate the new position
+        newX = oldX - e.touches[0].clientX;
+        newY = oldY - e.touches[0].clientY;
+        oldX = e.touches[0].clientX;
+        oldY = e.touches[0].clientY;
+
+        // set the element's new position
+        elem.style.top = (elem.offsetTop - newY) + "px";
+        elem.style.left = (elem.offsetLeft - newX) + "px";
+    }
+
+    // end of touch
+    function touchEnd() {
+        // stop moving when no longer touching
+        document.ontouchcancel = null;
+        document.ontouchend = null;
+        document.ontouchmove = null;
     }
 }
