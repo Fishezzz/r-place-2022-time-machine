@@ -35,11 +35,6 @@ header >ul > li {
 }
 
 #image {
-    width: 100vmax;
-    height: 100vmax;
-}
-
-#draggable {
     position: absolute;
     z-index: 9;
 }

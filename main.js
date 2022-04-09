@@ -54,8 +54,8 @@ loadData();
 // update image when slider changes
 slider.addEventListener("change", sliderChanged);
 
-// Make the DIV element draggable
-dragElement(document.getElementById("draggable"));
+// Make the image draggable
+dragElement(image);
 
 function dragElement(elem) {
     let newX = 0, newY = 0, oldX = 0, oldY = 0;
