@@ -20,8 +20,8 @@
 
     <link rel="icon" type="image/png" sizes="256x256" href="./place.png">
     <link rel="stylesheet" type="text/css" media="screen" href="./main.css">
-    <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.min.js"></script>
     <script defer src="./main.js"></script>
+    <script src="./load.js"></script>
 </head>
 <body>
     <header>
@@ -30,13 +30,13 @@
                 <div id="datetime"></div>
             </li>
             <li>
-                <input id="slider" type="range" min="0" max="10410" step="1">
+                <input id="slider" name="time" type="range" min="1648764000000" max="1649064000000" step="60000">
             </li>
         </ul>
     </header>
     <main>
-        <canvas id="place" width="2000px" height="2000px"></canvas>
-        <img id="image" src="https://rplace.space/combined/1648822500.png" style="width: 100vmin; height: 100vmin;">
+        <!-- <canvas id="place" width="2000px" height="2000px"></canvas> -->
+        <canvas id="place" width="100vmin" height="100vmin"></canvas>
     </main>
 </body>
 </html>

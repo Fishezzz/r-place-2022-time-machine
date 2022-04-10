@@ -1,58 +1,49 @@
-let pixels = [[{ "timestamp": "", "user_id": "", "pixel_color": "" }]];
+function pixelsLoaded() {
+    slider.value = 1648764000000;
+    datetime.innerHTML = toDataString(slider.value);
+    updateCanvas(1648764000000, 0, 0, 1000, 1000);
 
-///////////* WITH IMAGES FROM SITE *///////////
-const BASE_URL = "https://rplace.space/combined/";
+    slider.addEventListener("change", sliderChanged);
+}
 
-let data = [{ "file": "", "date": "", "size": 0 }];
-let cooldown;
-let onCooldown = false;
+/**
+ * Updates the canvas with pixels from within the given area, or the whole canvas.
+ * Uses the most recent update for each pixel from before, or at, the given timestamp.
+ */
+function updateCanvas(timestamp, x1 = 0, y1 = 0, x2 = 1999, y2 = 1999) {
+    // console.log("Updating canvas (" + timestamp + ") ...");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function loadData() {
-    // load json file
-    let xhr = new XMLHttpRequest();
-    if (xhr !== null) {
-        xhr.open("GET", "../index-combined.json");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    // parse response
-                    data = JSON.parse(xhr.responseText);
-
-                    // set some initial values
-                    slider.value = 0;
-                    slider.max = data.length - 1;
-                    datetime.innerHTML = dateFromFilename(data[0].file);
-                }
-            }
+    for (let x = x1; x <= x2; x++) {
+        for (let y = y1; y <= y2; y++) {
+            ctx.fillStyle = findPixel(x, y, timestamp).pixel_color;
+            ctx.fillRect(x, y, scale, scale);
         }
-        xhr.send();
     }
+    // console.log("Finished updating canvas");
 }
 
-function sliderChanged(event) {
-    if (!onCooldown) {
-        image.src = BASE_URL + data[slider.value].file;
-        datetime.innerHTML = dateFromFilename(data[slider.value].file);
-
-        onCooldown = true;
-        cooldown = setTimeout(() => { onCooldown = false; }, 200);
-    } else {
-        event.stopImmediatePropagation();
-    }
+function findPixel(x, y, timestamp) {
+    return pixels[x][y]
+        .filter(updates => updates.timestamp <= timestamp)
+        .reduce((prev, curr) => prev.timestamp > curr.timestamp ? prev : curr);
 }
 
-function dateFromFilename(filename) {
-    let unix = parseInt(filename.split('.')[0]);
-    let date = new Date(unix * 1000);
-    return date.toUTCString();
+function sliderChanged() {
+    datetime.innerHTML = toDataString(slider.value);
+    updateCanvas(slider.value, 0, 0, 1000, 1000);
 }
 
-let image = document.getElementById("image");
+function toDataString(timestamp) {
+    let date = new Date(+timestamp);
+    return date.toString().split(' GMT')[0] + "." + date.getTime().toString().substring(0, 3);
+}
+
 let datetime = document.getElementById("datetime");
 let slider = document.getElementById("slider");
 
-loadData();
+let canvas = document.getElementsByTagName("canvas")[0];
+let ctx = canvas.getContext('2d');
+let scale = 1;
 
-// update image when slider changes
-slider.addEventListener("change", sliderChanged);
+loadPixelData().then(() => pixelsLoaded);
