@@ -1,6 +1,6 @@
 const BASE_URL = "https://rplace.space/combined/";
 
-let data;
+let data = [{ "file": "", "date": "", "size": 0 }];
 let cooldown;
 let onCooldown = false;
 

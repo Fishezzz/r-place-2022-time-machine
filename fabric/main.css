@@ -34,11 +34,6 @@ header > ul > li {
     min-width: 250px;
 }
 
-#image {
-    position: absolute;
-    z-index: 9;
-}
-
-.move {
-    cursor: move;
+#place {
+    border: 1px solid blue;
 }

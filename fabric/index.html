@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Begin SEO tag -->
+    <title>r/place 2022 time machine</title>
+    <meta property="og:title" content="r/place 2022 time machine">
+    <meta property="og:locale" content="en_US">
+    <meta name="description" content="Reddit r/place 2022 Time Machine viewer and archive">
+    <meta property="og:description" content="Reddit r/place 2022 Time Machine viewer and archive">
+    <link rel="canonical" href="https://fishezzz.github.io/r-place-2022-time-machine/">
+    <meta property="og:url" content="https://fishezzz.github.io/r-place-2022-time-machine/">
+    <meta property="og:site_name" content="fishezzz.github.io">
+    <script type="application/ld+json">
+        {"@type":"WebSite","url":"https://fishezzz.github.io/r-place-2022-time-machine/","name":"fishezzz.github.io","headline":"r/place 2022 time machine","description":"Reddit r/place 2022 Time Machine viewer and archive","@context":"http://schema.org"}
+    </script>
+    <!-- End SEO tag -->
+
+    <link rel="icon" type="image/png" sizes="256x256" href="./place.png">
+    <link rel="stylesheet" type="text/css" media="screen" href="./main.css">
+    <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.min.js"></script>
+    <script defer src="./main.js"></script>
+</head>
+<body>
+    <header>
+        <ul>
+            <li>
+                <div id="datetime"></div>
+            </li>
+            <li>
+                <input id="slider" type="range" min="0" max="10410" step="1">
+            </li>
+        </ul>
+    </header>
+    <main>
+        <canvas id="place" width="2000px" height="2000px"></canvas>
+        <img id="image" src="https://rplace.space/combined/1648822500.png" style="width: 100vmin; height: 100vmin;">
+    </main>
+</body>
+</html>
