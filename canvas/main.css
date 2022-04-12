@@ -7,8 +7,6 @@ body {
 
 header {
     background-color: #1f1f1f;
-    position: relative;
-    z-index: 10;
     overflow: hidden;
 }
 
@@ -25,20 +23,28 @@ header > ul > li {
 }
 
 #datetime {
-    width: 30ch;
+    width: 26ch;
     margin: 4px;
 }
 
 #slider {
-    width: calc(100vw - 30ch - 75px);
+    height: 24px;
+    width: calc(100vw - 26ch - 160px);
     min-width: 250px;
+    margin-left: 15px;
 }
 
-#image {
-    position: absolute;
-    z-index: 9;
+#place {
+    width: 100vw;
+    height: calc(100vh - 48px);
 }
 
-.move {
-    cursor: move;
+button {
+    color: #ffffff;
+    background-color: cornflowerblue;
+    width: 28px;
+    height: 28px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
 }
