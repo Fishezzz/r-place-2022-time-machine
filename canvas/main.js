@@ -79,7 +79,6 @@ function updateView(changeX = 0, changeY = 0) {
         view.center.y = HCH;
     }
 
-
     // update corners
     view.corner1.x = view.center.x - HCW / scale;
     view.corner1.y = view.center.y - HCH / scale;

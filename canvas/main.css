@@ -34,10 +34,10 @@ header > ul > li {
     margin-left: 15px;
 }
 
-#place {
+/* #place {
     width: 100vw;
     height: calc(100vh - 48px);
-}
+} */
 
 button {
     color: #ffffff;

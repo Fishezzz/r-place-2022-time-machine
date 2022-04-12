@@ -10,36 +10,65 @@ let pixels = Array.from(
 async function loadPixelData() {
     const LENGTH = 5;
 
-    let xhr = new XMLHttpRequest();
-    if (xhr !== null) {
-        xhr.open("GET", "./header.txt", true);
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    console.log("Processing pixels...");
+    let xhr1 = new XMLHttpRequest();
+    if (xhr1 !== null) {
+        xhr1.open("GET", "./2022_place_canvas_history-000000000000-1.csv", true);
+        xhr1.onreadystatechange = () => {
+            if (xhr1.readyState === 4) {
+                if (xhr1.status === 200) {
+                    // request part 2
+                    let xhr2 = new XMLHttpRequest();
+                    if (xhr2 !== null) {
+                        xhr2.open("GET", "./2022_place_canvas_history-000000000000-2.csv", true);
+                        xhr2.onreadystatechange = () => {
+                            if (xhr2.readyState === 4) {
+                                if (xhr1.status === 200) {
+                                    console.log("Processing pixels part 2...");
+
+                                    // parse response
+                                    let allText2 = xhr1.responseText;
+                                    let allLines2 = allText2.split(/\r\n|\n/);
+
+                                    // convert single lines to items in pixels matrix
+                                    for (let i = 1; i < allLines2.length; i++) {
+                                        let items = allLines2[i].split(',');
+                                        if (items.length >= LENGTH) {
+                                            processPixel(...items);
+                                        }
+                                    }
+
+                                    // sort each pixel's updates on timestamp
+                                    pixels.forEach(x => x.forEach(y => y.sort((a, b) => a.timestamp - b.timestamp)));
+
+                                    console.log("Pixels part 2 processed!");
+
+                                    pixelsLoaded();
+                                }
+                            }
+                        }
+                        xhr2.send();
+                    }
+
+                    // process part 1
+                    console.log("Processing pixels part 1...");
 
                     // parse response
-                    let allText = xhr.responseText;
-                    let allLines = allText.split(/\r\n|\n/);
+                    let allText1 = xhr1.responseText;
+                    let allLines1 = allText1.split(/\r\n|\n/);
 
                     // convert single lines to items in pixels matrix
-                    for (let i = 1; i < allLines.length; i++) {
-                        let items = allLines[i].split(',');
+                    for (let i = 1; i < allLines1.length; i++) {
+                        let items = allLines1[i].split(',');
                         if (items.length >= LENGTH) {
                             processPixel(...items);
                         }
                     }
 
-                    // sort each pixel's updates on timestamp
-                    pixels.forEach(x => x.forEach(y => y.sort((a, b) => a.timestamp - b.timestamp)));
-
-                    console.log("Pixels processed!");
-
-                    pixelsLoaded();
+                    console.log("Pixels part 1 processed!");
                 }
             }
         }
-        xhr.send();
+        xhr1.send();
     }
 }
 
