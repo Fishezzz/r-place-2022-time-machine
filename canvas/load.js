@@ -12,14 +12,14 @@ async function loadPixelData() {
 
     let xhr1 = new XMLHttpRequest();
     if (xhr1 !== null) {
-        xhr1.open("GET", "./2022_place_canvas_history-000000000000-1.csv", true);
+        xhr1.open("GET", "../data/2022_place_canvas_history-000000000000-1.csv", true);
         xhr1.onreadystatechange = () => {
             if (xhr1.readyState === 4) {
                 if (xhr1.status === 200) {
                     // request part 2
                     let xhr2 = new XMLHttpRequest();
                     if (xhr2 !== null) {
-                        xhr2.open("GET", "./2022_place_canvas_history-000000000000-2.csv", true);
+                        xhr2.open("GET", "../data/2022_place_canvas_history-000000000000-2.csv", true);
                         xhr2.onreadystatechange = () => {
                             if (xhr2.readyState === 4) {
                                 if (xhr1.status === 200) {
@@ -53,22 +53,27 @@ async function loadPixelData() {
                     console.log("Processing pixels part 1...");
 
                     // parse response
-                    let allText1 = xhr1.responseText;
-                    let allLines1 = allText1.split(/\r\n|\n/);
+                    let allText = xhr.responseText;
+                    let allLines = allText.split(/\r\n|\n/);
 
                     // convert single lines to items in pixels matrix
-                    for (let i = 1; i < allLines1.length; i++) {
-                        let items = allLines1[i].split(',');
+                    for (let i = 1; i < allLines.length; i++) {
+                        let items = allLines[i].split(',');
                         if (items.length >= LENGTH) {
                             processPixel(...items);
                         }
                     }
 
-                    console.log("Pixels part 1 processed!");
+                    // sort each pixel's updates on timestamp
+                    pixels.forEach(x => x.forEach(y => y.sort((a, b) => a.timestamp - b.timestamp)));
+
+                    console.log("Pixels processed!");
+
+                    pixelsLoaded();
                 }
             }
         }
-        xhr1.send();
+        xhr.send();
     }
 }
 
