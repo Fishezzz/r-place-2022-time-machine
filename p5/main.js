@@ -31,6 +31,7 @@ function pixelsLoaded() {
     window.onresize = () => {
         pixel_ratio_X = window.screen.width / window.screen.availWidth;
         pixel_ratio_Y = window.screen.height / window.screen.availHeight;
+        resized = true;
         updateView();
     }
 }
@@ -111,34 +112,41 @@ function updateView(changeX = 0, changeY = 0) {
     **/
 
     // check borders
-    if (_center.x + changeX < HALF_CANVAS) {
-        // if it would go too far to the left
-        changeX = HALF_CANVAS - _center.x;
-    } else if (_center.x + changeX > SIZE - 1 - HALF_CANVAS) {
-        // if it would go too far to the right
-        changeX = SIZE - 1 - HALF_CANVAS - _center.x;
+    if (_center.x + changeX < half_canvas_scaled_floor) {
+        if (resized) { // when resizing at borders, view might be partially outside of the edges
+            _center.x = half_canvas_scaled_floor;
+        } else { // if it would go too far to the left
+            changeX = half_canvas_scaled_floor - _center.x;
+        }
+    } else if (_center.x + changeX > SIZE - 1 - half_canvas_scaled_floor) {
+        if (resized) { // when resizing at borders, view might be partially outside of the edges
+            _center.x = SIZE - 1 - half_canvas_scaled_floor;
+        } else { // if it would go too far to the right
+            changeX = SIZE - 1 - half_canvas_scaled_floor - _center.x;
+        }
     }
-    if (_center.y + changeY < HALF_CANVAS) {
-        // if it would go too far to the top
-        changeY = HALF_CANVAS - _center.y;
-    } else if (_center.y + changeY > SIZE - 1 - HALF_CANVAS) {
-        // if it would go too far to the bottm
-        changeY = SIZE - 1 - HALF_CANVAS - _center.y;
+    if (_center.y + changeY < half_canvas_scaled_floor) {
+        if (resized) { // when resizing at borders, view might be partially outside of the edges
+            _center.y = half_canvas_scaled_floor;
+        } else { // if it would go too far to the top
+            changeY = half_canvas_scaled_floor - _center.y;
+        }
+    } else if (_center.y + changeY > SIZE - 1 - half_canvas_scaled_floor) {
+        if (resized) { // when resizing at borders, view might be partially outside of the edges
+            _center.y = SIZE - 1 - half_canvas_scaled_floor;
+        } else { // if it would go too far to the bottom
+            changeY = SIZE - 1 - half_canvas_scaled_floor - _center.y;
+        }
     }
+
+    // if there are no changes, no need to update canvas
+    if (changeX === 0 && changeY === 0 && !resized) return;
+
+    resized = false;
 
     // update center
     _center.x += changeX;
     _center.y += changeY;
-
-    // if there are no changes, no need to update canvas
-    if (changeX === 0 && changeY === 0) return;
-
-    // sanity checks
-    if (_center.x < 0 || _center.x >= SIZE || _center.y < 0 || _center.y >= SIZE) {
-        alert("IT FUCKED");
-        _center.x = HALF_CANVAS;
-        _center.y = HALF_CANVAS;
-    }
 
     // update canvas
     updateCanvas(slider.value);
@@ -233,8 +241,9 @@ function zoomIn() {
         _scale *= 2
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / _scale);
         zoom.innerHTML = "x" + _scale;
+        resized = true;
 
-        updateCanvas(slider.value);
+        updateView();
     }
 }
 
@@ -243,8 +252,9 @@ function zoomOut() {
         _scale /= 2
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / _scale);
         zoom.innerHTML = "x" + _scale;
+        resized = true;
 
-        updateCanvas(slider.value);
+        updateView();
     }
 }
 
@@ -277,6 +287,7 @@ let canvas;
 
 // global variables
 let loaded = false;
+let resized = false;
 let _scale, half_canvas_scaled_floor, pixel_ratio_X, pixel_ratio_Y;
 let _center = { x: HALF_CANVAS, y: HALF_CANVAS };
 
