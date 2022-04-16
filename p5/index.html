@@ -21,26 +21,36 @@
     <link rel="icon" type="image/png" sizes="256x256" href="./place.png">
     <link rel="stylesheet" type="text/css" media="screen" href="./main.css">
     <script defer src="./main.js"></script>
+    <script src="./load.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js"
+            integrity="sha512-NxocnqsXP3zm0Xb42zqVMvjQIktKEpTIbCXXyhBPxqGZHqhcOXHs4pXI/GoZ8lE+2NJONRifuBpi9DxC58L0Lw==" crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <header>
         <ul>
             <li>
-                <a href="./canvas/">canvas</a>
+                <a href="../">home</a>
             </li>
             <li>
-                <a href="./p5/">P5.js</a>
+                <div id="datetime">...</div>
             </li>
             <li>
-                <div id="datetime"></div>
+                <button id="zoom_out"><b>-</b></button>
             </li>
             <li>
-                <input id="slider" type="range" min="0" max="10410" step="1">
+                <button id="zoom_in"><b>+</b></button>
+            </li>
+            <li>
+                <div id="zoom"></div>
+            </li>
+            <li>
+                <input id="slider" name="time" type="range" min="1648764000000" max="1649064000000" step="60000">
             </li>
         </ul>
     </header>
     <main>
-        <img id="image" src="https://rplace.space/combined/1648822500.png">
+        <div id="loader"></div>
     </main>
 </body>
 </html>
