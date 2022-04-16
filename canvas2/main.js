@@ -30,21 +30,20 @@ function toDataString(timestamp) {
 function updateCanvas(timestamp) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // calculate how many non-scald pixel need to be drawn around the center
+    // and the non-scaled corner pixels of the viewing window
     let x1 = center.x - half_canvas_scaled_floor;
     let y1 = center.y - half_canvas_scaled_floor;
     let x2 = center.x + half_canvas_scaled_floor;
     let y2 = center.y + half_canvas_scaled_floor;
-    console.log(
-        "canvas:", canvas.width + "x" + canvas.height,
-        ", scale:", scale,
-        ", view:", (x2 - x1) + "x" + (y2 - y1),
-        ", center:", center,
-        "(" + x1, y1 + ")", "(" + x2, y2 + ")"
-    );
 
     for (let x = x1; x <= x2; x++) {
         for (let y = y1; y <= y2; y++) {
+            // get the pixel data for a pixel in the viewing window
             ctx.fillStyle = findPixel(x, y, timestamp).pixel_color;
+            // pixels are drawn relative to the center of the window, but
+            //   this distance also needs to be scaled to the scaling factor
+            // pixels are drawn with a size equal to the scaling factor
             ctx.fillRect((x - x1) * scale, (y - y1) * scale, scale, scale);
         }
     }
@@ -56,8 +55,8 @@ function updateTime() {
 }
 
 function updateView(changeX = 0, changeY = 0) {
-    // change values "old_pos - new_pos"
     /*
+     * Canvas borders:
      *  ___________  . . . . .
      * |     .     |         .
      * |     .     |         .
@@ -72,22 +71,36 @@ function updateView(changeX = 0, changeY = 0) {
      * 
      * "half-canvas" ---[x]---> "SIZE - half-canvas"
      * 
+     * 
+     * Directon changes:
      * X: 0 -> 1 => changeX = -1
      * X: 1 -> 0 => changeX = 1
      * 
      * Y: 0 -> 1 => changeY = -1
      * Y: 1 -> 0 => changeY = 1
+     * 
+     * But mouse moves in opposite direction of the direction
+     *   we want the canvas to move
+     * X: 0 -> 1 => mouseX = 1  canvasX = -1
+     * X: 1 -> 0 => mouseX = -1 canvasX = 1
+     * 
+     * Y: 0 -> 1 => mouseY = 1  canvasY = -1
+     * Y: 1 -> 0 => mouseY = -1 canvasY = 1
     **/
 
     // check borders
     if (center.x + changeX < HALF_CANVAS) {
+        // if it would go too far to the left
         changeX = HALF_CANVAS - center.x;
     } else if (center.x + changeX > SIZE - 1 - HALF_CANVAS) {
+        // if it would go too far to the right
         changeX = SIZE - 1 - HALF_CANVAS - center.x;
     }
     if (center.y + changeY < HALF_CANVAS) {
+        // if it would go too far to the top
         changeY = HALF_CANVAS - center.y;
     } else if (center.y + changeY > SIZE - 1 - HALF_CANVAS) {
+        // if it would go too far to the bottm
         changeY = SIZE - 1 - HALF_CANVAS - center.y;
     }
 
@@ -216,16 +229,19 @@ const HALF_CANVAS = 256;
 const SCALE_MIN = 1;
 const SCALE_MAX = 16;
 
+// get HTML elements
 let datetime = document.getElementById("datetime");
 let slider = document.getElementById("slider");
 let zoom_out = document.getElementById("zoom_out");
 let zoom_in = document.getElementById("zoom_in");
 
+// prepare canvas and drawing context
 let canvas = document.getElementsByTagName("canvas")[0];
 let ctx = canvas.getContext('2d');
 canvas.width = 2 * HALF_CANVAS;
 canvas.height = 2 * HALF_CANVAS;
 
+// init global values
 let scale = 4;
 let half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
 
