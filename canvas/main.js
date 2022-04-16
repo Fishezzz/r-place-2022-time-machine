@@ -2,6 +2,10 @@ function init() {
     canvas.width = 2 * HALF_CANVAS;
     canvas.height = 2 * HALF_CANVAS;
 
+    // setup loader
+    canvas.setAttribute("style", "display: none;");
+    loader.setAttribute("style", "margin: calc((" + canvas.width + "px - 60px - 16px) / 2);");
+
     scale = 4;
     half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
     zoom.innerHTML = "x" + scale;
@@ -13,8 +17,13 @@ function init() {
 }
 
 function pixelsLoaded() {
+    // update slider
     slider.value = 1649064000000;
     updateTime();
+
+    // remove loader
+    loader.remove();
+    canvas.removeAttribute("style");
 
     // add eventListeners
     dragElement(canvas);
@@ -253,6 +262,7 @@ let slider = document.getElementById("slider");
 let zoom_out = document.getElementById("zoom_out");
 let zoom_in = document.getElementById("zoom_in");
 let zoom = document.getElementById("zoom");
+let loader = document.getElementById("loader");
 
 // prepare canvas and drawing context
 let canvas = document.getElementsByTagName("canvas")[0];
