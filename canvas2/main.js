@@ -95,6 +95,9 @@ function updateView(changeX = 0, changeY = 0) {
     center.x += changeX;
     center.y += changeY;
 
+    // if there are no changes, no need to update canvas
+    if (changeX === 0 && changeY === 0) return;
+
     // sanity checks
     if (center.x < 0 || center.x >= SIZE || center.y < 0 || center.y >= SIZE) {
         alert("IT FUCKED");
@@ -135,7 +138,6 @@ function dragElement(elem) {
         // calculate the new cursor position
         changeX = oldX - e.clientX;
         changeY = oldY - e.clientY;
-        console.log("X:", changeX, "(" + oldX, e.clientX + ")", "Y:", changeY, "(" + oldY, e.clientY + ")");
         oldX = e.clientX;
         oldY = e.clientY;
 
@@ -195,7 +197,6 @@ function zoomIn() {
     if (scale < SCALE_MAX) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scale *= 2
-        // ctx.scale(2, 2);
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
         updateCanvas(slider.value);
     }
@@ -205,14 +206,13 @@ function zoomOut() {
     if (scale > SCALE_MIN) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scale /= 2
-        // ctx.scale(0.5, 0.5);
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
         updateCanvas(slider.value);
     }
 }
 
 const SIZE = 2000;
-const HALF_CANVAS = 250;
+const HALF_CANVAS = 256;
 const SCALE_MIN = 1;
 const SCALE_MAX = 16;
 
@@ -232,19 +232,6 @@ let half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
 let pixel_ratio_X = window.screen.width / window.screen.availWidth;
 let pixel_ratio_Y = window.screen.height / window.screen.availHeight;
 
-/** half the canvas width */
-const HCW = canvas.width / 2;
-/** half the canvas height */
-const HCH = canvas.height / 2;
-
-// reference point in pixel coordinates
-let view = {
-    center: { x: HCW, y: HCH },
-    corner1: { x: 0, y: 0 },
-    corner2: { x: canvas.width, y: canvas.height }
-}
-
 let center = { x: HALF_CANVAS, y: HALF_CANVAS };
 
 loadPixelData().then(() => pixelsLoaded);
-// pixelsLoaded();
