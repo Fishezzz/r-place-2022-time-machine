@@ -28,16 +28,24 @@ function toDataString(timestamp) {
 }
 
 function updateCanvas(timestamp) {
-    let x1 = Math.floor((center.x - HALF_CANVAS) / scale);
-    let y1 = Math.floor((center.y - HALF_CANVAS) / scale);
-    let x2 = Math.floor((center.x + HALF_CANVAS) / scale);
-    let y2 = Math.floor((center.y + HALF_CANVAS) / scale);
-    console.log("center", center, "(" + x1, y1 + ")", "(" + x2, y2 + ")");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let x1 = center.x - half_canvas_scaled_floor;
+    let y1 = center.y - half_canvas_scaled_floor;
+    let x2 = center.x + half_canvas_scaled_floor;
+    let y2 = center.y + half_canvas_scaled_floor;
+    console.log(
+        "canvas:", canvas.width + "x" + canvas.height,
+        ", scale:", scale,
+        ", view:", (x2 - x1) + "x" + (y2 - y1),
+        ", center:", center,
+        "(" + x1, y1 + ")", "(" + x2, y2 + ")"
+    );
 
     for (let x = x1; x <= x2; x++) {
         for (let y = y1; y <= y2; y++) {
             ctx.fillStyle = findPixel(x, y, timestamp).pixel_color;
-            ctx.fillRect(x * scale - x1, y * scale - y1, scale, scale);
+            ctx.fillRect((x - x1) * scale, (y - y1) * scale, scale, scale);
         }
     }
 }
@@ -72,20 +80,20 @@ function updateView(changeX = 0, changeY = 0) {
     **/
 
     // check borders
-    if (center.x - changeX < HALF_CANVAS) {
-        changeX = center.x;
-    } else if (center.x - changeX > SIZE - 1 - HALF_CANVAS) {
+    if (center.x + changeX < HALF_CANVAS) {
+        changeX = HALF_CANVAS - center.x;
+    } else if (center.x + changeX > SIZE - 1 - HALF_CANVAS) {
         changeX = SIZE - 1 - HALF_CANVAS - center.x;
     }
-    if (center.y - changeY < HALF_CANVAS) {
-        changeY = center.y;
-    } else if (center.y - changeY > SIZE - 1 - HALF_CANVAS) {
+    if (center.y + changeY < HALF_CANVAS) {
+        changeY = HALF_CANVAS - center.y;
+    } else if (center.y + changeY > SIZE - 1 - HALF_CANVAS) {
         changeY = SIZE - 1 - HALF_CANVAS - center.y;
     }
 
     // update center
-    center.x -= changeX;
-    center.y -= changeY;
+    center.x += changeX;
+    center.y += changeY;
 
     // sanity checks
     if (center.x < 0 || center.x >= SIZE || center.y < 0 || center.y >= SIZE) {
@@ -188,6 +196,7 @@ function zoomIn() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scale *= 2
         // ctx.scale(2, 2);
+        half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
         updateCanvas(slider.value);
     }
 }
@@ -197,6 +206,7 @@ function zoomOut() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scale /= 2
         // ctx.scale(0.5, 0.5);
+        half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
         updateCanvas(slider.value);
     }
 }
@@ -217,6 +227,7 @@ canvas.width = 2 * HALF_CANVAS;
 canvas.height = 2 * HALF_CANVAS;
 
 let scale = 4;
+let half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
 
 let pixel_ratio_X = window.screen.width / window.screen.availWidth;
 let pixel_ratio_Y = window.screen.height / window.screen.availHeight;
