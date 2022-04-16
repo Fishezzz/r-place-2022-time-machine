@@ -1,5 +1,17 @@
-// start: 1648764000000
-//   end: 1649064000000
+function init() {
+    canvas.width = 2 * HALF_CANVAS;
+    canvas.height = 2 * HALF_CANVAS;
+
+    scale = 4;
+    half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
+    zoom.innerHTML = "x" + scale;
+
+    pixel_ratio_X = window.screen.width / window.screen.availWidth;
+    pixel_ratio_Y = window.screen.height / window.screen.availHeight;
+
+    loadPixelData().then(() => pixelsLoaded);
+}
+
 function pixelsLoaded() {
     slider.value = 1649064000000;
     updateTime();
@@ -209,8 +221,11 @@ function dragElement(elem) {
 function zoomIn() {
     if (scale < SCALE_MAX) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         scale *= 2
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
+        zoom.innerHTML = "x" + scale;
+
         updateCanvas(slider.value);
     }
 }
@@ -218,14 +233,17 @@ function zoomIn() {
 function zoomOut() {
     if (scale > SCALE_MIN) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         scale /= 2
         half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
+        zoom.innerHTML = "x" + scale;
+
         updateCanvas(slider.value);
     }
 }
 
 const SIZE = 2000;
-const HALF_CANVAS = 256;
+const HALF_CANVAS = 512;
 const SCALE_MIN = 1;
 const SCALE_MAX = 16;
 
@@ -234,20 +252,14 @@ let datetime = document.getElementById("datetime");
 let slider = document.getElementById("slider");
 let zoom_out = document.getElementById("zoom_out");
 let zoom_in = document.getElementById("zoom_in");
+let zoom = document.getElementById("zoom");
 
 // prepare canvas and drawing context
 let canvas = document.getElementsByTagName("canvas")[0];
 let ctx = canvas.getContext('2d');
-canvas.width = 2 * HALF_CANVAS;
-canvas.height = 2 * HALF_CANVAS;
 
-// init global values
-let scale = 4;
-let half_canvas_scaled_floor = Math.floor(HALF_CANVAS / scale);
-
-let pixel_ratio_X = window.screen.width / window.screen.availWidth;
-let pixel_ratio_Y = window.screen.height / window.screen.availHeight;
-
+// global variables
+let scale, half_canvas_scaled_floor, pixel_ratio_X, pixel_ratio_Y;
 let center = { x: HALF_CANVAS, y: HALF_CANVAS };
 
-loadPixelData().then(() => pixelsLoaded);
+init();

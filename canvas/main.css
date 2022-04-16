@@ -32,6 +32,11 @@ header > ul > li:last-child {
     margin: 4px;
 }
 
+#zoom {
+    width: 2ch;
+    margin: 4px;
+}
+
 #slider {
     height: 24px;
     width: calc(100% - 30px);
@@ -44,11 +49,6 @@ main {
     display: flex;
     justify-content: center;
 }
-
-/* #place {
-    width: 100vw;
-    height: calc(100vh - 48px);
-} */
 
 button {
     color: #ffffff;
